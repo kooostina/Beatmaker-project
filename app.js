@@ -5,9 +5,15 @@ class DrumKit {
     this.snareAudio = document.querySelector('.snare-sound');
     this.hiHatAudio = document.querySelector('.hihat-sound');
     this.playBtn = document.querySelector('.play');
+    this.muteBtns = document.querySelectorAll('.mute');
+    this.currentKick = './sounds/kick-classic.wav';
+    this.currentSnare = './sounds/snare-acoustic01.wav';
+    this.currentHihat = './sounds/hihat-acoustic01.wav';
     this.index = 0;
     this.bpm = 150;
     this.isPlaying = null;
+    this.selects = document.querySelectorAll('select');
+    this.tempoSlider = document.querySelector('.tempo-slider');
   }
 
   activePad() {
@@ -56,7 +62,7 @@ class DrumKit {
   }
 
   updateBtn() {
-    if (this.isPlaying) {
+    if (!this.isPlaying) {
       this.playBtn.innerText = "Stop";
       this.playBtn.classList.add("active");
     } else {
@@ -65,11 +71,85 @@ class DrumKit {
     }
   }
 
+  changeSound(e) {
+    // console.log(e);
+    const selectionName = e.target.name;
+    const selectionValue = e.target.value;
+    switch (selectionName) {
+      case "kick-select":
+        this.kickAudio.src = selectionValue;
+        break;
+      case "snare-select":
+        this.snareAudio.src = selectionValue;
+        break;
+      case "hihat-select":
+        this.hiHatAudio.src = selectionValue;
+        break;
+    }
+  }
+
+  mute(e) {
+    // console.log(e.target);
+    const muteIndex = e.target.getAttribute('data-track'); //get the attribute of a specific mute button
+    e.target.classList.toggle('active'); //add a class to it when it's muted
+    if (e.target.classList.contains('active')) {
+      switch (muteIndex) {
+        case '0':
+          this.kickAudio.volume = 0;
+          break;
+        case '1':
+          this.snareAudio.volume = 0;
+          break;
+        case '2':
+          this.hiHatAudio.volume = 0;
+          break;
+      }
+    } else {
+      switch (muteIndex) {
+        case '0':
+          this.kickAudio.volume = 1;
+          break;
+        case '1':
+          this.snareAudio.volume = 1;
+          break;
+        case '2':
+          this.hiHatAudio.volume = 1;
+          break;
+      }
+    }
+  }
+
+  changeTempoText(e) {
+    const tempoText = document.querySelector('.tempo-nr'); //get the span with the tempo number
+    this.bpm = e.target.value; //update the beats per minute
+    tempoText.innerText = e.target.value;
+  }
+
+  updateTempo() {
+    clearInterval(this.isPlaying);
+    this.isPlaying = null;
+    if (this.playBtn.classList.contains('active')) {
+      drumKit.start();
+    }
+  }
 }
 
 
-
 const drumKit = new DrumKit();
+
+
+// Event Listeners 
+drumKit.selects.forEach(select => {
+  select.addEventListener('change', function (e) {
+    drumKit.changeSound(e);
+  })
+})
+
+drumKit.muteBtns.forEach(btn => {
+  btn.addEventListener('click', function (e) {
+    drumKit.mute(e);
+  })
+})
 
 drumKit.pads.forEach(pad => {
   pad.addEventListener('click', drumKit.activePad); //toggle the active class of the pads when you click on them
@@ -79,5 +159,14 @@ drumKit.pads.forEach(pad => {
 })
 
 drumKit.playBtn.addEventListener('click', () => {
+  drumKit.updateBtn();
   drumKit.start(); //when we clck the play button the start method runs
+})
+
+drumKit.tempoSlider.addEventListener('input', function (e) {
+  drumKit.changeTempoText(e);
+})
+
+drumKit.tempoSlider.addEventListener('change', function () {
+  drumKit.updateTempo();
 })

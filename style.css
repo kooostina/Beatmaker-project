@@ -14,6 +14,10 @@ body {
   display: flex;
 }
 
+i {
+  pointer-events: none;
+}
+
 .kick-pad {
   background-color: rgb(255, 123, 123);
 }
@@ -42,8 +46,8 @@ body {
   height: 4rem;
   width: 4rem;
   margin: 0 0.5rem;
-    transition: all .5s ease;
-    cursor: pointer;
+  transition: all .5s ease;
+  cursor: pointer;
 }
 
 .kick-track,
@@ -75,11 +79,15 @@ body {
 .controls button {
   padding: 1rem;
   border: none;
-  background-color:rgb(77, 77, 77);
+  background-color: rgb(77, 77, 77);
   cursor: pointer;
   font-size: 1rem;
   color: white;
   transition: all .5s ease;
+}
+
+.mute.active {
+  background-color: rgb(179, 179, 179);
 }
 
 .play {
@@ -99,11 +107,44 @@ select {
   cursor: pointer;
 }
 
+.tempo {
+  width: 30%;
+  margin: 3rem 0;
+}
+
+.tempo-slider {
+  -webkit-appearance: none;
+  border-radius: 1rem;
+  padding: .2rem;
+  margin: 1rem 0;
+  width: 100%;
+  position: relative;
+  background-color: rgb(77, 77, 77);
+  cursor: pointer;
+}
+
+.tempo-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 10px;
+  background-color: rgb(255, 255, 255);
+  /* overflow: visible; */
+}
+
+.tempo-text {
+  font-size: 1.5rem;
+  text-align: center;
+  margin: 1.5rem;
+}
+
 
 @keyframes playTrack {
   from {
     transform: scale(1);
-  } to {
+  }
+
+  to {
     transform: scale(1.2);
   }
 }
